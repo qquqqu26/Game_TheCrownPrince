@@ -1,0 +1,88 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using TMPro;
+using System;
+
+public class UI_Study : UI_Scene
+{
+    #region UI¿­°ÅÀÚ
+    enum Texts
+    {
+        statText,
+        statNumText,
+
+    }
+
+    enum Images
+    {
+        SiKangwonImage,
+    }
+
+    enum Panels
+    {
+        NextPanel,
+    }
+
+    enum Sliders
+    {
+        statSlider,
+    }
+    #endregion
+
+    public override bool Init()
+    {
+        if (base.Init() == false)
+            return false;
+
+        Bind();
+        studySet = FindObjectOfType<UI_HomePopup>().GetStudySet();
+        Gets();
+
+        return true;
+    }
+
+    public override void Bind()
+    {
+        Bind<TextMeshProUGUI>(typeof(Texts));
+        Bind<Image>(typeof(Images));
+        Bind<Slider>(typeof(Sliders));
+        Bind<GameObject>(typeof(Panels));
+
+    }
+
+    public override void Gets()
+    {
+        GetText((int)Texts.statText).text = Managers.GetText(studySet[studyIndex]);
+        key = (studySet[studyIndex] - Define.subjectID);
+        GetText((int)Texts.statNumText).text = Managers.Game.stats[key].value.ToString(); 
+        GetObject((int)Panels.NextPanel).gameObject.AddUIEvent((PointerEventData data) => { nextState(); });
+
+    }
+
+    //**********************************************************************************************************************
+
+    int[] studySet;
+    int studyIndex = 0;
+    int key = 0;
+
+    private void nextState()
+    {
+        if(studyIndex == 1)
+        {
+            Managers.Time.NextState();
+            return;
+        }
+
+        ++studyIndex;
+        Gets();
+
+    }
+
+    private void updateStat()
+    {
+        
+    }
+}
