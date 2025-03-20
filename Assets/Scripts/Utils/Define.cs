@@ -72,7 +72,7 @@ public class Define
     public const int Subject = 5106;
 
 
-    public const int subjectID = 7001;
+    public const int subjectID= 7001;
     public const int subjectDescriptionID = 7101;
 
 

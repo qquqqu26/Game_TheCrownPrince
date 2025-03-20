@@ -57,7 +57,7 @@ public class UI_Study : UI_Scene
     {
         GetText((int)Texts.statText).text = Managers.GetText(studySet[studyIndex]);
         key = (studySet[studyIndex] - Define.subjectID);
-        GetText((int)Texts.statNumText).text = Managers.Game.stats[key].value.ToString(); 
+        GetText((int)Texts.statNumText).text = Managers.Game.stats[key].value.ToString();
         GetObject((int)Panels.NextPanel).gameObject.AddUIEvent((PointerEventData data) => { nextState(); });
 
     }
@@ -67,22 +67,54 @@ public class UI_Study : UI_Scene
     int[] studySet;
     int studyIndex = 0;
     int key = 0;
+    float speed = 0.05f;
 
     private void nextState()
     {
-        if(studyIndex == 1)
+        Debug.Log($"오전{studySet[0]}&오후{studySet[1]}");
+        updateStat();
+
+        if (studyIndex == 1)
         {
             Managers.Time.NextState();
+
             return;
         }
+
 
         ++studyIndex;
         Gets();
 
     }
 
+    float increasingValue = 10f;
     private void updateStat()
     {
-        
+        Debug.Log($"전: {Managers.Game.stats[key].value}");
+        Managers.Game.stats[key].value += increasingValue;
+        Debug.Log($"후: {Managers.Game.stats[key].value}");
+        GetText((int)Texts.statNumText).text = Managers.Game.stats[key].value.ToString();
+
+    }
+
+    private IEnumerator statIncreasing()
+    {
+
+        float rising = 0;
+        while (true)
+        {
+            if(increasingValue >= rising)
+            {
+                Managers.Game.stats[key].value += increasingValue;
+                Get<Slider>((int)Sliders.statSlider).value = Managers.Game.stats[key].value / Managers.Game.statMaxValue;
+                yield return new WaitForSeconds(speed);
+            }
+            else
+            {
+                Debug.Log($"후: {Managers.Game.stats[key].value}");
+                GetText((int)Texts.statNumText).text = Managers.Game.stats[key].value.ToString();
+                yield break;
+            }
+        }
     }
 }

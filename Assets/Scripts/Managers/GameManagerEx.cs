@@ -56,13 +56,20 @@ public class GameData{
     public Record[] endings = new Record[MAX_ENDING_COUNT];
 }
 
-public class GameManagerEx 
+public class GameManagerEx
 {
     GameData _gameData = new GameData();
-    public GameData SaveData { get { return _gameData; } set { _gameData = value;  } }
+    public GameData SaveData { get { return _gameData; } set { _gameData = value; } }
 
     #region 1. ´É·ÂÄ¡
     public Dictionary<int, PlayerStatData> stats = new Dictionary<int, PlayerStatData>();
+
+    private int[] _studySet;
+    public int[] studySet
+    {
+        get { return _studySet; }
+        set { _studySet = value; }
+    }
 
     public int statMaxValue = 100;
     public float stress

@@ -44,7 +44,7 @@ public class UI_Story: UI_Scene
             return false;
 
         Bind();
-        dialogueID = Managers.Story.startID;
+        dialogueID = Managers.Story.storyStartID;
         Gets();
 
         return true;
@@ -66,6 +66,7 @@ public class UI_Story: UI_Scene
     }
 
     //***************************
+    StoryManager _story = Managers.Story;
     StoryData story = null;
     _CharacterData speaker
     {
@@ -156,8 +157,7 @@ public class UI_Story: UI_Scene
             #endregion
 
             story = Managers.Data.Stories[dialogueID];
-            typeState = TypeState.completed;
-
+            _story.didTypeCompleted = true;
 
             SetBackground();
             SetDialogue();
@@ -213,30 +213,22 @@ public class UI_Story: UI_Scene
 
     }
 
-    enum TypeState
-    {
-        playing,
-        completed,
-    }
-
-    private TypeState typeState;
-    public float typeSpeed = 0.04f;
     private IEnumerator TypeText(string text)
     {
         GetText((int)Texts.dialogueText).text = "";
-        typeState = TypeState.playing;
+        _story.didTypeCompleted = false;
         int wordIndex = 0;
 
-        while(typeState != TypeState.completed)
+        while(_story.didTypeCompleted == false)
         {
             GetObject((int)Objects.NextPanel).gameObject.SetActive(false);
             GetText((int)Texts.dialogueText).text += text[wordIndex];
-            yield return new WaitForSeconds(typeSpeed);
+            yield return new WaitForSeconds(_story.typeSpeed);
 
             if(++wordIndex == text.Length)
             {
                 GetObject((int)Objects.NextPanel).gameObject.SetActive(true);
-                typeState = TypeState.completed;
+                _story.didTypeCompleted = true;
                 yield break;
             }
         }

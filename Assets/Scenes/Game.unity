@@ -327,8 +327,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4f3ffe1e59d3544c9050a2e68a17f5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doesStorySkip: 0
+  doesDialogueSkip: 0
   isTypeEffectOn: 0
-  doesDialogueSkip: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

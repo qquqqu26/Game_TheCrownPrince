@@ -21,7 +21,6 @@ public class Managers : MonoBehaviour
     TimeManager _time = new TimeManager();
     StoryManager _story = new StoryManager();
 
-    //static UI_Warning _warning = new UI_Warning();
 
     public static ResourceManager Resource { get { return Instance._resource; } }
     public static InputManager Input { get { return Instance._input; } }
@@ -31,6 +30,7 @@ public class Managers : MonoBehaviour
     public static GameManagerEx Game { get { return Instance._game; } }
     public static TimeManager Time { get {  return Instance._time; } }
     public static StoryManager Story { get { return Instance._story; } }
+
     #endregion
 
     #region 디버깅 모드 관리
@@ -41,7 +41,7 @@ public class Managers : MonoBehaviour
 
 
     #endregion
-
+    static Action init;
     public static string savePath;
     public static bool IsPreloaded { get; private set; } = false;
 
@@ -100,12 +100,16 @@ public class Managers : MonoBehaviour
             DontDestroyOnLoad(scene); //삭제 방지
             s_instance = go.GetComponent<Managers>();
 
+            init += () => { GameObject.Find("@Scene").AddComponent<GameScene>(); };
+            init += Story.Init;
+
             //프리로딩
             Managers.UI.ShowSceneUI<UI_LoadingScene>();
             if (!IsPreloaded)
             {
                 s_instance.StartCoroutine(s_instance.PreloadData());
             }
+
             
         }
     
@@ -126,8 +130,7 @@ public class Managers : MonoBehaviour
         IsPreloaded = true; // 프리로딩 완료 플래그 설정
         Managers.UI.CloseSceneUI();
 
-        GameObject.Find("@Scene").AddComponent<GameScene>();
-
+        init.Invoke();
     }
 
 }
